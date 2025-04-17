@@ -1,0 +1,15 @@
+<section class="section" [formGroup]="cardFormGroup">
+  <h4>Cards:</h4>
+  <div class="div">
+    <div class="row-buttons">
+      <button mat-flat-button id="buttonCreate">Create</button>
+      <button mat-flat-button id="buttonEdit">Edit</button>
+      <button mat-flat-button id="buttonDelete">Delete</button>
+    </div>
+  </div>
+  <div *ngFor="let card of cards">
+    <p>
+      <mat-checkbox id="check-'card.id'">{{ card.name }}</mat-checkbox>
+    </p>
+  </div>
+</section>

@@ -1,0 +1,9 @@
+.row-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: blueviolet;
+}

@@ -1,3 +1,34 @@
+# Documentation
+
+## Routing
+
+"/" => "home" component (protected)
+"/login" => login component
+"/register" => register component
+If `sessionManager` has no `jwt_token`, redirect to "/login".
+
+## Components
+
+- Custom `types`: `Card`, `Deck`
+- `app.component` holds `<router-outlet>`
+- `api.service` for api fetching with `HttpClient`
+
+header with ngIf login or register button.
+
+Selecting a deck in the list updates the cards list through a service.
+
+login form with ngIf to adapt to registration form.
+
+# Card Game Documentation
+
+## Routing
+
+"" => "home" (protected)
+"/login"
+"/register"
+
+## Structure
+
 # Frontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.7.

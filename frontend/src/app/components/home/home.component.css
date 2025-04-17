@@ -1,0 +1,41 @@
+.container-main {
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0px;
+}
+.row1 {
+  background-color: antiquewhite;
+  display: flex;
+  height: 64px;
+}
+.row2 {
+  background-color: lightcoral;
+  display: flex;
+  height: fit-content;
+  justify-content: center;
+  height: fit-content;
+  padding: 16px;
+}
+.row3 {
+  background-color: lightgreen;
+  display: flex;
+  height: fit-content;
+  justify-content: center;
+  flex-direction: row;
+}
+.column-decks {
+  background-color: lightpink;
+  display: flex;
+  width: 50%;
+  justify-content: end;
+  padding-right: 20px;
+}
+.column-cards {
+  background-color: lightblue;
+  display: flex;
+  width: 50%;
+  justify-content: start;
+  padding-left: 20px;
+}

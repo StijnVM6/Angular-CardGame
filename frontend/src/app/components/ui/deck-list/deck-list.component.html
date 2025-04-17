@@ -1,0 +1,8 @@
+<section class="section" [formGroup]="deckFormGroup">
+  <h4>Decks:</h4>
+  <div *ngFor="let deck of decks">
+    <p>
+      <mat-checkbox>{{ deck.name }}</mat-checkbox>
+    </p>
+  </div>
+</section>
