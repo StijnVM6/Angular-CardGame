@@ -1,8 +1,10 @@
-<section class="section" [formGroup]="deckFormGroup">
+<!-- <section class="section" [formGroup]="deckFormGroup">
   <h4>Decks:</h4>
   <div *ngFor="let deck of decks">
     <p>
-      <mat-checkbox>{{ deck.name }}</mat-checkbox>
+      <mat-radio-button [id]="'check_' + deck.id">{{
+        deck.name
+      }}</mat-radio-button>
     </p>
   </div>
-</section>
+</section> -->
