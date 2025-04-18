@@ -1,0 +1,84 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="over">
+    <div class="row1">
+      <button mat-icon-button>
+        <mat-icon (click)="sidenav.close()">close</mat-icon>
+      </button>
+    </div>
+
+    <div class="row2">
+      <form [formGroup]="formGroup">
+        <ng-container *ngFor="let field of formFields">
+          <mat-form-field
+            appearance="fill"
+            class="full-width"
+            *ngIf="!customFormTemplate || field.key !== 'cards'"
+          >
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [formControlName]="field.key" />
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="customFormTemplate">
+          <ng-container
+            *ngTemplateOutlet="customFormTemplate; context: { form: formGroup }"
+          ></ng-container>
+        </ng-container>
+      </form>
+    </div>
+
+    <div class="row3">
+      <button mat-raised-button (click)="onSave()">Save changes</button>
+      <button mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="row-title">
+      <h3 style="padding-left: 20px">{{ title }}</h3>
+      <button
+        mat-icon-button
+        id="'create_'title"
+        style="padding-right: 40px; align-self: center"
+      >
+        <mat-icon>add_box</mat-icon>
+      </button>
+    </div>
+    <table mat-table [dataSource]="items" class="mat-elevation-z8">
+      <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+        <th mat-header-cell *matHeaderCellDef>{{ getLabel(col) }}</th>
+        <td mat-cell *matCellDef="let item">
+          <ng-container [ngSwitch]="col">
+            <!-- Name column with clickable sidenav trigger -->
+            <ng-container *ngSwitchCase="'name'">
+              <span class="clickable" (click)="openSidenav(item)">
+                {{ item[col] }}
+              </span>
+            </ng-container>
+
+            <!-- Size column showing length of cards[] -->
+            <ng-container *ngSwitchCase="'totalForce'">
+              <div
+                matBadge="{{ item.cards?.length }}"
+                matBadgeSize="large"
+                matBadgeColor="accent"
+              >
+                {{ forces.get(item.id) ?? "N/A" }}
+              </div>
+            </ng-container>
+
+            <!-- Fallback for all other columns -->
+            <ng-container *ngSwitchDefault>
+              {{ item[col] }}
+            </ng-container>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-sidenav-content>
+</mat-sidenav-container>

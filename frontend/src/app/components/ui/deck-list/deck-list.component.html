@@ -1,10 +1,26 @@
-<!-- <section class="section" [formGroup]="deckFormGroup">
-  <h4>Decks:</h4>
-  <div *ngFor="let deck of decks">
-    <p>
-      <mat-radio-button [id]="'check_' + deck.id">{{
-        deck.name
-      }}</mat-radio-button>
-    </p>
+<app-entity-list
+  [items]="decks"
+  [displayedColumns]="['name', 'totalForce']"
+  [formFields]="[
+    { key: 'name', label: 'Deck Name' },
+    { key: 'cards', label: 'Cards' }
+  ]"
+  [customFormTemplate]="cardPicker"
+  title="Decks"
+  (saveItem)="onSaveDeck($event)"
+  [forces]="deckForces"
+>
+</app-entity-list>
+
+<ng-template #cardPicker let-form="form">
+  <div [formGroup]="form">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Cards</mat-label>
+      <mat-select formControlName="cards" multiple>
+        <mat-option *ngFor="let card of allCards" [value]="card.id.toString()">
+          {{ card.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-</section> -->
+</ng-template>

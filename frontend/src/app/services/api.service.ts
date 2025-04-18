@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { Card, Deck } from '../types';
 
 @Injectable({
@@ -10,11 +10,43 @@ export class ApiService {
   constructor(private http: HttpClient) {}
   baseUrl = 'http://localhost:3000/api';
 
+  getCards(): Observable<any> {
+    return this.http.get<Card[]>(this.baseUrl + '/cards');
+  }
+
+  getCardsAsync(): Promise<Card[]> {
+    return firstValueFrom(this.http.get<Card[]>(this.baseUrl + '/cards'));
+  }
+
+  getCardById(id: string): Observable<any> {
+    return this.http.get<Card[]>(`${this.baseUrl}/cards/${id}`);
+  }
+
+  updateCard(card: Card): Observable<Card> {
+    return this.http.put<Card>(`${this.baseUrl}/cards`, card);
+  }
+
+  createCard(card: Card): Observable<Card> {
+    return this.http.post<Card>(`${this.baseUrl}/cards`, card);
+  }
+
   getDecks(): Observable<any> {
     return this.http.get<Deck[]>(this.baseUrl + '/decks');
   }
 
-  getCards(): Observable<any> {
-    return this.http.get<Card[]>(this.baseUrl + '/cards');
+  getDecksAsync(): Promise<Deck[]> {
+    return lastValueFrom(this.getDecks());
+  }
+
+  getDeckById(id: string): Observable<any> {
+    return this.http.get<Deck[]>(`${this.baseUrl}/decks/${id}`);
+  }
+
+  updateDeck(deck: Deck): Observable<Deck> {
+    return this.http.put<Deck>(`${this.baseUrl}/decks`, deck);
+  }
+
+  createDeck(deck: Deck): Observable<Deck> {
+    return this.http.post<Deck>(`${this.baseUrl}/decks`, deck);
   }
 }

@@ -11,7 +11,11 @@ If `sessionManager` has no `jwt_token`, redirect to "/login".
 
 - Custom `types`: `Card`, `Deck`
 - `app.component` holds `<router-outlet>`
-- `api.service` for api fetching with `HttpClient`
+- `api.service` for api fetching with `HttpClient` (asynchronious by nature)
+- `enity-list`
+  - Display a list of entities: `card-list` & `decks-list`.
+  - Click an item name: opens sidenav with a dynamic form. Edit, delete, close
+  - Optionally render multi-selects input logic for cards in deck with `TemplateRef`.
 
 header with ngIf login or register button.
 
