@@ -33,8 +33,9 @@ export class CardListComponent {
   constructor(private api: ApiService, private snackBar: MatSnackBar) {}
   cards: Card[] = [];
 
-  ngOnInit() {
-    this.api.getCards().subscribe((res) => (this.cards = res));
+  async ngOnInit() {
+    // this.api.getCards().subscribe((res) => (this.cards = res));
+    this.cards = await this.api.getCardsAsync();
   }
 
   onSaveCard(updated: any) {

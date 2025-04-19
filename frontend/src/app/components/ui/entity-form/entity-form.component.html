@@ -1,0 +1,27 @@
+<div class="row2">
+  <form [formGroup]="formGroup">
+    <ng-container *ngFor="let field of formFields">
+      <mat-form-field
+        appearance="fill"
+        class="full-width"
+        *ngIf="!customFormTemplate || field.key !== 'cards'"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [formControlName]="field.key" />
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="customFormTemplate">
+      <ng-container
+        *ngTemplateOutlet="customFormTemplate; context: { form: formGroup }"
+      ></ng-container>
+    </ng-container>
+  </form>
+</div>
+
+<div class="row3">
+  <button mat-raised-button (click)="onSave()">Save changes</button>
+  <button mat-icon-button>
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

@@ -14,8 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
-import { CalcForceService } from '../../../services/calc-force.service';
 import { MatBadgeModule } from '@angular/material/badge';
+import { EntityFormComponent } from '../entity-form/entity-form.component';
 
 @Component({
   selector: 'app-entity-list',
@@ -30,6 +30,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatButtonModule,
     MatIconModule,
     MatBadgeModule,
+    EntityFormComponent,
   ],
   templateUrl: './entity-list.component.html',
   styleUrl: './entity-list.component.css',
@@ -47,7 +48,6 @@ export class EntityListComponent {
   selectedItem: any;
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  curr: any;
 
   ngOnInit() {
     this.formFields.forEach((form) => {
@@ -63,9 +63,8 @@ export class EntityListComponent {
 
   getLabel(key: string): string {
     const field = this.formFields.find((form) => form.key === key);
-    if (field) {
-      return field.label;
-    } else if (key === 'totalForce') return 'Force';
+    if (field) return field.label;
+    else if (key === 'totalForce') return 'Force';
     else return key;
   }
 
@@ -73,5 +72,9 @@ export class EntityListComponent {
     const updatedItem = { ...this.selectedItem, ...this.formGroup.value };
     this.saveItem.emit(updatedItem);
     this.sidenav.close();
+  }
+
+  onDelete() {
+    console.log('Delete clicked');
   }
 }
