@@ -42,6 +42,8 @@ export class EntityListComponent {
   @Input() title: string = '';
   @Input() customFormTemplate: TemplateRef<any> | null = null;
   @Output() saveItem = new EventEmitter<any>();
+  @Output() deleteItem = new EventEmitter<any>();
+  @Output() createItem = new EventEmitter<any>();
   @Input() forces: Map<string, number> = new Map();
 
   formGroup = new FormGroup({});
@@ -70,11 +72,25 @@ export class EntityListComponent {
 
   onSave() {
     const updatedItem = { ...this.selectedItem, ...this.formGroup.value };
-    this.saveItem.emit(updatedItem);
-    this.sidenav.close();
+    this.saveItem.emit({ item: updatedItem, isNew: !this.selectedItem });
+
+    // Close only if creating a new item
+    if (!this.selectedItem) {
+      this.sidenav.close();
+    }
   }
 
   onDelete() {
-    console.log('Delete clicked');
+    this.deleteItem.emit(this.selectedItem);
+    this.sidenav.close();
+  }
+
+  onCreate() {
+    this.selectedItem = null;
+    this.formGroup.reset();
+    this.formFields.forEach((field) => {
+      this.formGroup.get(field.key)?.setValue('');
+    });
+    this.sidenav.open();
   }
 }

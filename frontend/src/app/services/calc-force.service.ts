@@ -18,7 +18,7 @@ export class CalcForceService {
       .filter((card): card is Card => !!card);
 
     return cards.reduce(
-      (acc: number, card: Card): number => acc + card.value,
+      (acc: number, card: Card): number => acc + Number(card.value),
       0
     );
   }

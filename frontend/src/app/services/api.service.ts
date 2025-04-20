@@ -30,12 +30,22 @@ export class ApiService {
     return this.http.post<Card>(`${this.baseUrl}/cards`, card);
   }
 
+  deleteCard(id: string): Observable<Card> {
+    return this.http.delete<Card>(`${this.baseUrl}/cards/${id}`);
+  }
+
+  deleteCardAsync(id: string): Promise<Card> {
+    return firstValueFrom(
+      this.http.delete<Card>(`${this.baseUrl}/cards/${id}`)
+    );
+  }
+
   getDecks(): Observable<any> {
     return this.http.get<Deck[]>(this.baseUrl + '/decks');
   }
 
   getDecksAsync(): Promise<Deck[]> {
-    return lastValueFrom(this.getDecks());
+    return firstValueFrom(this.getDecks());
   }
 
   getDeckById(id: string): Observable<any> {
@@ -46,7 +56,21 @@ export class ApiService {
     return this.http.put<Deck>(`${this.baseUrl}/decks`, deck);
   }
 
+  updateDeckAsync(deck: Deck): Promise<Deck> {
+    return firstValueFrom(this.updateDeck(deck));
+  }
+
   createDeck(deck: Deck): Observable<Deck> {
     return this.http.post<Deck>(`${this.baseUrl}/decks`, deck);
+  }
+
+  deleteDeck(id: string): Observable<Deck> {
+    return this.http.delete<Deck>(`${this.baseUrl}/decks/${id}`);
+  }
+
+  deleteDeckAsync(id: string): Promise<Deck> {
+    return firstValueFrom(
+      this.http.delete<Deck>(`${this.baseUrl}/decks/${id}`)
+    );
   }
 }
