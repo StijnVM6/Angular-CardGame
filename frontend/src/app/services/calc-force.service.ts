@@ -22,4 +22,12 @@ export class CalcForceService {
       0
     );
   }
+
+  getTotalForceFromCards(deck: Deck, cards: Card[]): number {
+    const deckCards = deck.cards
+      .map((id: string) => cards.find((card) => card.id.toString() === id))
+      .filter((card): card is Card => !!card);
+
+    return deckCards.reduce((acc, card) => acc + Number(card.value), 0);
+  }
 }

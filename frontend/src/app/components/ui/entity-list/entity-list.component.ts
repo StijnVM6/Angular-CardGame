@@ -45,6 +45,7 @@ export class EntityListComponent {
   @Output() deleteItem = new EventEmitter<any>();
   @Output() createItem = new EventEmitter<any>();
   @Input() forces: Map<string, number> = new Map();
+  @Input() deckViolations: Set<string> = new Set();
 
   formGroup = new FormGroup({});
   selectedItem: any;

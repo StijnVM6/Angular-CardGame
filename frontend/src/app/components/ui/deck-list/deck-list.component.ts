@@ -82,7 +82,7 @@ export class DeckListComponent {
           0
         );
 
-        if (sumForce <= 20) {
+        if (sumForce <= 30) {
           this.api.updateDeck(item).subscribe(async (saved) => {
             this.decks[index] = saved;
             const force = await this.getTotalForce(this.decks[index]);
@@ -94,7 +94,7 @@ export class DeckListComponent {
           });
         } else {
           this.snackBar.open(
-            'The total force of a deck must not exceed 20.',
+            'The total force of a deck must not exceed 30.',
             'Close',
             {
               duration: 3000,
@@ -117,7 +117,10 @@ export class DeckListComponent {
       dialogRef.afterClosed().subscribe((result: boolean) => {
         if (result) {
           this.api.deleteDeck(index.toString()).subscribe(() => {
-            this.decks.splice(Number(index), 1);
+            const deckListIndex = this.decks.findIndex(
+              (deck) => deck.id === toDelete.id
+            );
+            this.decks.splice(deckListIndex, 1);
             this.snackBar.open('Deck successfully deleted!', 'Close', {
               duration: 3000,
             });

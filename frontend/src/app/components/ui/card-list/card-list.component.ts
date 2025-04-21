@@ -13,6 +13,7 @@ import { Card, Deck } from '../../../types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { CalcForceService } from '../../../services/calc-force.service';
 
 @Component({
   selector: 'app-card-list',
@@ -36,10 +37,16 @@ export class CardListComponent {
   constructor(
     private api: ApiService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private calcForce: CalcForceService
   ) {}
   cards: Card[] = [];
   allDecks: Deck[] = [];
+  deckViolations = new Set<string>();
+
+  getTotalForce = (deck: Deck): number => {
+    return this.calcForce.getTotalForceFromCards(deck, this.cards);
+  };
 
   async ngOnInit() {
     // this.api.getCards().subscribe((res) => (this.cards = res));
@@ -47,9 +54,7 @@ export class CardListComponent {
     this.allDecks = await this.api.getDecksAsync();
   }
 
-  onSaveCard({ item, isNew }: { item: Card; isNew: boolean }) {
-    const index = this.cards.findIndex((card) => card.id === item.id);
-
+  async onSaveCard({ item, isNew }: { item: Card; isNew: boolean }) {
     if (isNew) {
       // creating new item
       this.api.createCard(item).subscribe((created) => {
@@ -58,13 +63,19 @@ export class CardListComponent {
         this.snackBar.open('Card created!', 'Close', { duration: 3000 });
       });
     } else {
+      const index = this.cards.findIndex((card) => card.id === item.id);
       if (index > -1) {
         // editting existing item
+        const originalCard = this.cards.find((card) => card.id === item.id);
+        const forceIncreased = item.value > originalCard!.value;
+
+        // Update the card
         this.cards[index] = item;
         if (item.value <= 20 && item.value >= 0) {
           this.api.updateCard(item).subscribe((saved) => {
             this.cards[index] = saved;
             this.cards = [...this.cards]; // force redraw table because mat-table does not register change
+            this.allDecks = [...this.allDecks];
             this.snackBar.open('Card updated successfully!', 'Close', {
               duration: 3000,
             });
@@ -73,6 +84,28 @@ export class CardListComponent {
           this.snackBar.open('Card force must be between 0-20.', 'Close', {
             duration: 3000,
           });
+        }
+
+        // check if any of the decks' total power surpassed the max power allowed because of the card change.
+        if (forceIncreased) {
+          this.deckViolations.clear();
+          const affectedDecks: Deck[] = [];
+          for (const deck of this.allDecks) {
+            if (deck.cards.some((card) => card === item.id)) {
+              const force = await this.getTotalForce(deck);
+              console.log(force);
+              if (force > 30) {
+                this.deckViolations.add(deck.id);
+                affectedDecks.push(deck);
+              }
+            }
+          }
+          if (affectedDecks.length > 0) {
+            const deckNames = affectedDecks.map((deck) => deck.name).join(', ');
+            console.log(
+              `WARNING: The following decks surpassed the allowed total force: ${deckNames}`
+            );
+          }
         }
       }
     }
@@ -89,20 +122,23 @@ export class CardListComponent {
       });
       dialogRef.afterClosed().subscribe(async (result: boolean) => {
         if (result) {
-          // Remove card to delete from all decks
+          // Remove card-to-delete from decks
           const affectedDecks = this.allDecks.filter((deck: Deck) =>
-            deck.cards?.some((cardId) => cardId === toDelete.id.toString())
+            deck.cards?.some((cardId) => cardId === toDelete.id)
           );
           for (const deck of affectedDecks) {
-            deck.cards = deck.cards.filter(
-              (cardId) => cardId !== toDelete.id.toString()
-            );
+            deck.cards = deck.cards.filter((cardId) => cardId !== toDelete.id);
             await this.api.updateDeckAsync(deck);
           }
 
           // Delete card
-          this.api.deleteCard(index.toString()).subscribe(() => {
-            this.cards.splice(index, 1);
+          this.api.deleteCard(index).subscribe(() => {
+            const cardListIndex = this.cards.findIndex(
+              (card) => card.id === toDelete.id
+            );
+            this.cards.splice(cardListIndex, 1);
+            this.cards = [...this.cards];
+            this.allDecks = [...this.allDecks];
             this.snackBar.open('Card successfully deleted!', 'Close', {
               duration: 3000,
             });
