@@ -44,8 +44,8 @@ export class DeckListComponent {
   allCards: Card[] = [];
   deckForces = new Map<string, number>();
 
-  getTotalForce = async (deck: Deck): Promise<number> => {
-    return await this.calcForce.getTotalForce(deck);
+  getTotalForce = (deck: Deck): number => {
+    return this.calcForce.getTotalForceFromCards(deck, this.allCards);
   };
 
   async ngOnInit() {
@@ -54,7 +54,7 @@ export class DeckListComponent {
     this.decks = await this.api.getDecksAsync();
     this.allCards = await this.api.getCardsAsync();
     for (const deck of this.decks) {
-      const force = await this.getTotalForce(deck);
+      const force = this.getTotalForce(deck);
       this.deckForces.set(deck.id, force);
     }
   }
@@ -83,9 +83,9 @@ export class DeckListComponent {
         );
 
         if (sumForce <= 30) {
-          this.api.updateDeck(item).subscribe(async (saved) => {
+          this.api.updateDeck(item).subscribe((saved) => {
             this.decks[index] = saved;
-            const force = await this.getTotalForce(this.decks[index]);
+            const force = this.getTotalForce(this.decks[index]);
             this.deckForces.set(this.decks[index].id, force);
             this.decks = [...this.decks]; // force redraw table because mat-table does not register change
             this.snackBar.open('Deck updated successfully!', 'Close', {
