@@ -1,1 +1,116 @@
-<p>game works!</p>
+<div class="container-main">
+  <app-header></app-header>
+  <div class="container-main-2">
+    <div class="column1" [ngClass]="{ 'disabled-overlay': playAreaVisible }">
+      <button mat-stroked-button (click)="onReturn()" style="margin-top: 10px">
+        Return to homepage
+      </button>
+      <h3>Select deck:</h3>
+      <div class="row1">
+        <button
+          mat-flat-button
+          [disabled]="!selectedDeckId || playAreaVisible"
+          (click)="confirmDeckChoice()"
+        >
+          Confirm deck
+        </button>
+      </div>
+
+      <div class="row2">
+        <div class="decks-list">
+          <mat-radio-group
+            [(ngModel)]="selectedDeckId"
+            [disabled]="playAreaVisible"
+          >
+            <div *ngFor="let deck of decks" class="radio-options">
+              <mat-radio-button [value]="deck.id">
+                {{ deck.name }}
+                ({{ deckForces.get(deck.id) ?? "..." }})
+              </mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+
+        <div *ngIf="selectedDeckId">
+          <!-- <p>Selected deck ID: {{ selectedDeckId }}</p> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="column2" [ngClass]="{ 'disabled-overlay': !playAreaVisible }">
+      <div class="row-g1">
+        <div class="column" style="flex: 0.5; justify-content: start">
+          <button
+            mat-stroked-button
+            (click)="onReturnToDeckChoice()"
+            style="align-self: flex-end; margin-left: 20px; margin-top: 20px"
+          >
+            Return to deck choice
+          </button>
+        </div>
+        <ng-container *ngIf="gameOver; else scoreDisplay">
+          <div class="results">
+            <h2 style="margin: 2px; margin-top: 10px; justify-self: center">
+              Game Over
+            </h2>
+            <p style="margin: 0px; justify-self: center">
+              Final Score: {{ scorePlayer }} - {{ scoreComputer }}
+            </p>
+            <h3 style="margin: 2px; margin-bottom: 10px; justify-self: center">
+              {{ winner }}
+            </h3>
+          </div>
+        </ng-container>
+        <ng-template #scoreDisplay>
+          <div class="column" style="display: flex; justify-content: start">
+            <h3>{{ scorePlayer }} - {{ scoreComputer }}</h3>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="row-g2">
+        <div class="column-g2" id="column-g2-1">
+          <div *ngIf="selectedPlayerCard">
+            {{ selectedPlayerCard.name }} ({{ selectedPlayerCard.value }})
+          </div>
+        </div>
+        <div class="column-g2" id="column-g2-2">
+          <div *ngIf="selectedComputerCard">
+            {{ selectedComputerCard.name }} ({{ selectedComputerCard.value }})
+          </div>
+        </div>
+      </div>
+
+      <div class="row-g3">
+        <button
+          mat-flat-button
+          [disabled]="!roundInProgress"
+          (click)="handleNextAction()"
+        >
+          {{ currentRound >= maxRounds ? "Show results" : "Next round" }}
+        </button>
+        <button
+          mat-flat-button
+          [disabled]="!selectedCardId || cardChoiceConfirmed"
+          (click)="confirmCardChoice()"
+        >
+          Confirm choice
+        </button>
+      </div>
+
+      <div class="row-g4">
+        <div
+          class="column-g2"
+          *ngFor="let card of playerHand"
+          (click)="!cardChoiceConfirmed && onSelectCard(card)"
+          [class.disabled]="cardChoiceConfirmed"
+          style="display: flex; flex-direction: column; cursor: pointer"
+        >
+          <div>{{ card.name }}</div>
+          <div>{{ card.value }}</div>
+        </div>
+      </div>
+      <div class="row-g5"></div>
+    </div>
+  </div>
+</div>

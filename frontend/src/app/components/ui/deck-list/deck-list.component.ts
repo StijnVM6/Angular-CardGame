@@ -62,44 +62,50 @@ export class DeckListComponent {
   onSaveDeck({ item, isNew }: { item: Deck; isNew: boolean }) {
     const index = this.decks.findIndex((deck) => deck.id === item.id);
 
-    if (isNew) {
-      // creating new item
-      this.api.createDeck(item).subscribe((created) => {
-        this.decks.push(created);
-        this.decks = [...this.decks];
-        this.snackBar.open('Deck created!', 'Close', { duration: 3000 });
+    if (item.cards.length < 5) {
+      this.snackBar.open('Deck must have exactly 5 cards!', 'Close', {
+        duration: 3000,
       });
     } else {
-      if (index > -1) {
-        // editting existing item
-        this.decks[index] = item;
-        const cards = this.allCards.filter((card) =>
-          item.cards.includes(card.id.toString())
-        );
-
-        const sumForce = cards.reduce(
-          (acc: number, card: Card): number => acc + Number(card.value),
-          0
-        );
-
-        if (sumForce <= 30) {
-          this.api.updateDeck(item).subscribe((saved) => {
-            this.decks[index] = saved;
-            const force = this.getTotalForce(this.decks[index]);
-            this.deckForces.set(this.decks[index].id, force);
-            this.decks = [...this.decks]; // force redraw table because mat-table does not register change
-            this.snackBar.open('Deck updated successfully!', 'Close', {
-              duration: 3000,
-            });
-          });
-        } else {
-          this.snackBar.open(
-            'The total force of a deck must not exceed 30.',
-            'Close',
-            {
-              duration: 3000,
-            }
+      if (isNew) {
+        // creating new item
+        this.api.createDeck(item).subscribe((created) => {
+          this.decks.push(created);
+          this.decks = [...this.decks];
+          this.snackBar.open('Deck created!', 'Close', { duration: 3000 });
+        });
+      } else {
+        if (index > -1) {
+          // editting existing item
+          this.decks[index] = item;
+          const cards = this.allCards.filter((card) =>
+            item.cards.includes(card.id.toString())
           );
+
+          const sumForce = cards.reduce(
+            (acc: number, card: Card): number => acc + Number(card.value),
+            0
+          );
+
+          if (sumForce <= 30) {
+            this.api.updateDeck(item).subscribe((saved) => {
+              this.decks[index] = saved;
+              const force = this.getTotalForce(this.decks[index]);
+              this.deckForces.set(this.decks[index].id, force);
+              this.decks = [...this.decks]; // force redraw table because mat-table does not register change
+              this.snackBar.open('Deck updated successfully!', 'Close', {
+                duration: 3000,
+              });
+            });
+          } else {
+            this.snackBar.open(
+              'The total force of a deck must not exceed 30.',
+              'Close',
+              {
+                duration: 3000,
+              }
+            );
+          }
         }
       }
     }
