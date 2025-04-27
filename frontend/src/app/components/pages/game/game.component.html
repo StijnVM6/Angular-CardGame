@@ -69,14 +69,16 @@
       </div>
 
       <div class="row-g2">
-        <div class="column-g2" id="column-g2-1">
-          <div *ngIf="selectedPlayerCard">
-            {{ selectedPlayerCard.name }} ({{ selectedPlayerCard.value }})
+        <div class="column-g2" id="column-g2-1" [class.disabled]="gameOver">
+          <div *ngIf="selectedPlayerCard" style="text-align: center">
+            {{ selectedPlayerCard.name }} <br />
+            {{ selectedPlayerCard.value }}
           </div>
         </div>
-        <div class="column-g2" id="column-g2-2">
-          <div *ngIf="selectedComputerCard">
-            {{ selectedComputerCard.name }} ({{ selectedComputerCard.value }})
+        <div class="column-g2" id="column-g2-2" [class.disabled]="gameOver">
+          <div *ngIf="selectedComputerCard" style="text-align: center">
+            {{ selectedComputerCard.name }} <br />
+            {{ selectedComputerCard.value }}
           </div>
         </div>
       </div>
@@ -84,7 +86,7 @@
       <div class="row-g3">
         <button
           mat-flat-button
-          [disabled]="!roundInProgress"
+          [disabled]="!roundInProgress || gameOver"
           (click)="handleNextAction()"
         >
           {{ currentRound >= maxRounds ? "Show results" : "Next round" }}
@@ -104,10 +106,13 @@
           *ngFor="let card of playerHand"
           (click)="!cardChoiceConfirmed && onSelectCard(card)"
           [class.disabled]="cardChoiceConfirmed"
+          [class.selected]="selectedCardId === card.id"
           style="display: flex; flex-direction: column; cursor: pointer"
         >
-          <div>{{ card.name }}</div>
-          <div>{{ card.value }}</div>
+          <div style="text-align: center">
+            {{ card.name }} <br />
+            {{ card.value }}
+          </div>
         </div>
       </div>
       <div class="row-g5"></div>

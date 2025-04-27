@@ -141,6 +141,7 @@ export class GameComponent {
     this.cardChoiceConfirmed = true;
     this.roundInProgress = true;
   }
+
   onSelectCard(card: Card) {
     this.selectedCardId = card.id;
     this.selectedPlayerCard = card;
@@ -161,10 +162,17 @@ export class GameComponent {
       this.playedComputerCards.includes(card.id.toString())
     );
 
+    this.selectedPlayerCard = null;
+    this.selectedComputerCard = null;
+
     this.currentRound++;
   }
 
   showFinalResults() {
+    this.selectedPlayerCard = null;
+    this.selectedComputerCard = null;
+    this.playerHand = [];
+
     this.gameOver = true;
 
     if (this.scorePlayer > this.scoreComputer) {
