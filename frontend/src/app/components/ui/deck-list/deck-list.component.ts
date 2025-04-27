@@ -71,7 +71,9 @@ export class DeckListComponent {
         // creating new item
         this.api.createDeck(item).subscribe((created) => {
           this.decks.push(created);
-          this.decks = [...this.decks];
+          const force = this.getTotalForce(created);
+          this.deckForces.set(created.id, force);
+          this.decks = [...this.decks]; // force redraw
           this.snackBar.open('Deck created!', 'Close', { duration: 3000 });
         });
       } else {
@@ -118,6 +120,7 @@ export class DeckListComponent {
         data: {
           title: 'Delete Deck',
           message: `Are you sure you want to delete "${toDelete.name}"?`,
+          buttonLabel: 'Delete',
         },
       });
       dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -127,6 +130,7 @@ export class DeckListComponent {
               (deck) => deck.id === toDelete.id
             );
             this.decks.splice(deckListIndex, 1);
+            this.decks = [...this.decks]; // force redraw
             this.snackBar.open('Deck successfully deleted!', 'Close', {
               duration: 3000,
             });

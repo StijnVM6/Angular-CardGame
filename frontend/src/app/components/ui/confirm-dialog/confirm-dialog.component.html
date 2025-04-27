@@ -3,6 +3,6 @@
 <mat-dialog-actions align="end" style="padding: 10px">
   <button mat-flat-button (click)="dialogRef.close(false)">Cancel</button>
   <button mat-raised-button color="warn" (click)="dialogRef.close(true)">
-    Delete
+    {{ data.buttonLabel }}
   </button>
 </mat-dialog-actions>

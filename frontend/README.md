@@ -1,37 +1,55 @@
-# Documentation
-
-## Routing
-
-"/" => "home" component (protected)
-"/login" => login component
-"/register" => register component
-If `sessionManager` has no `jwt_token`, redirect to "/login".
-
-## Components
-
-- Custom `types`: `Card`, `Deck`
-- `app.component` holds `<router-outlet>`
-- `api.service` for api fetching with `HttpClient` (asynchronious by nature)
-- `enity-list`
-  - Display a list of entities: `card-list` & `decks-list`.
-  - Click an item name: opens sidenav with a dynamic form. Edit, delete, close
-  - Optionally render multi-selects input logic for cards in deck with `TemplateRef`.
-
-header with ngIf login or register button.
-
-Selecting a deck in the list updates the cards list through a service.
-
-login form with ngIf to adapt to registration form.
-
 # Card Game Documentation
 
 ## Routing
 
-"" => "home" (protected)
-"/login"
-"/register"
+"/" redirect to: "/home" => **home** component (protected) </br>
+"/game" => **game** component (protected) </br>
+"/login" => **login** component </br>
+"/register" => **register** component <br/>
+If `localStorage` has no `token`, redirect to "/login".
 
-## Structure
+## Services
+
+- `api.service` for api fetching from **server** with `HttpClient` (asynchronious by nature).
+- `auth.service` for api fetching from **ssoServer** with `HttpClient`.
+- `calc-force` for dynamic total force calculation of all cards within a deck.
+
+## Components
+
+### Custom types:
+
+`Card`, `Deck`, `Profile` </br>
+
+### Pages:
+
+- home
+- game
+- login
+- register
+
+Order of redirection:
+
+- "/" => "/home"
+- if not nogged in => "/login"
+- on login page, option for registration => "/registration"
+- on registration page, option for login => "/login"
+- when logged in, home is available. "play" redirect to => "/game"
+- neither "game", nor "home" are available when not logged in.
+
+### UI components:
+
+- `app.component` holds `<router-outlet>`
+- `home` components contains child `deck-` and `card-list` components.
+- Child `enity-list` displays a list of parent component entities: `card-list` & `decks-list`.
+  - Click an item name: opens sidenav with a dynamic child `entity-form` form fields to edit, delete, close, ...
+  - Optionally render multi-selects input logic for cards in deck with `TemplateRef`.
+- `confirm-dialogue` is a shared yes/no verifictaion dialogue.
+- `header` is a repeatable component that is shared over multiple pages.
+- `game` component contains all game elements. Can be partitioned further into repeatable components further down the line.
+
+## Guards
+
+`authGuard` protects "home" and "game" routes.
 
 # Frontend
 

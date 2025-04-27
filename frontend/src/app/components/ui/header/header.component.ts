@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -12,14 +14,29 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  constructor(public router: Router, private authService: AuthService) {}
+  constructor(
+    public router: Router,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) {}
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
   logout(): void {
-    this.router.navigate(['/login']);
-    localStorage.removeItem('token');
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Logout',
+        message: `Are you sure you want to logout?`,
+        buttonLabel: 'Logout',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.router.navigate(['/login']);
+        localStorage.removeItem('token');
+      }
+    });
   }
 }

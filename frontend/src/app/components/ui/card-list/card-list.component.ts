@@ -118,6 +118,7 @@ export class CardListComponent {
         data: {
           title: 'Delete Card',
           message: `Are you sure you want to delete "${toDelete.name}"?`,
+          buttonLabel: 'Delete',
         },
       });
       dialogRef.afterClosed().subscribe(async (result: boolean) => {
