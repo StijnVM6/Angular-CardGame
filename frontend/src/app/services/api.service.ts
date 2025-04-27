@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Card, Deck } from '../types';
 
 @Injectable({

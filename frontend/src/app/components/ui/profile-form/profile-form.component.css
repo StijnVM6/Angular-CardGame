@@ -1,0 +1,11 @@
+.row-profile {
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px;
+  margin-left: calc(100vw - 65%);
+  margin-right: calc(100vw - 65%);
+}
+#confirm {
+  margin-left: 10px;
+  margin-right: 10px;
+}

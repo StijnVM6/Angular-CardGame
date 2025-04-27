@@ -1,6 +1,31 @@
 <mat-toolbar color="primary">
   <span>Card Game Angular</span>
   <span class="spacer"></span>
-  <button mat-flat-button aria-label="Login">Login</button>
-  <button mat-flat-button aria-label="Register">Register</button>
+
+  <button
+    *ngIf="router.url === '/register'"
+    routerLink="/login"
+    mat-raised-button
+    aria-label="Login"
+  >
+    Login
+  </button>
+
+  <button
+    *ngIf="router.url === '/login'"
+    routerLink="/register"
+    mat-raised-button
+    aria-label="Register"
+  >
+    Register
+  </button>
+
+  <button
+    *ngIf="isLoggedIn && (router.url === '/home' || router.url === '/game')"
+    mat-raised-button
+    (click)="logout()"
+    aria-label="Logout"
+  >
+    Logout
+  </button>
 </mat-toolbar>

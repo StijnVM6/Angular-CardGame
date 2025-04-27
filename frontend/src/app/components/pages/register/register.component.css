@@ -1,0 +1,22 @@
+body,
+html {
+  margin: 0;
+  height: 100%;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 100vw;
+  padding: 0px;
+  overflow-x: hidden;
+}
+
+.container-main-2 {
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0px;
+}
